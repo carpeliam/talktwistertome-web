@@ -15,6 +15,8 @@ recognition.lang = 'en-US';
 recognition.continuous = true;
 recognition.interimResults = true;
 recognition.onstart = function() {
+  $('.start').prop('disabled', true);
+  $('.stop').prop('disabled', false);
   console.log('start', arguments);
 }
 recognition.onresult = function(e) {
@@ -26,7 +28,7 @@ recognition.onresult = function(e) {
     var result = e.results[e.resultIndex];
     if (result.isFinal) {
       console.log('Speech result: ' + result[0].transcript);
-      if (result[0].transcript.match(/\bgo\b/g)) {
+      if (/\bgo\b/i.test(result[0].transcript)) {
         takeTurn();
       }
     } else {
@@ -40,6 +42,8 @@ recognition.onerror = function(e) {
   console.log('error', e);
 };
 recognition.onend = function() {
+  $('.start').prop('disabled', false);
+  $('.stop').prop('disabled', true);
   console.log('done!');
   speechSynthesis.speak(new SpeechSynthesisUtterance("Are you done? I think you're done."));
 };
